@@ -5,6 +5,7 @@ using UnityEngine;
 public class CarController : MonoBehaviour
 {
         private float steerAngle;
+        public Rigidbody rb;
 
         public WheelCollider frontLeftWheelCollider;
         public WheelCollider frontRightWheelCollider;
@@ -18,6 +19,13 @@ public class CarController : MonoBehaviour
         public float maxSteeringAngle = 30f;
         public float motorForce = 50f;
         public float brakeForce = 0f;
+        public float maxSpeed;
+        private float speed;
+
+    private void start ()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
 
     public void HandleSteering(float direction)
     {
@@ -28,24 +36,22 @@ public class CarController : MonoBehaviour
 
     public void HandleMotor(float throttle, bool isBreaking)
     {
-        if (throttle != 0)
+        speed = rb.velocity.sqrMagnitude;
+        Debug.Log(speed);
+        if (throttle != 0 && speed < maxSpeed)
         {
             rearLeftWheelCollider.motorTorque = throttle * motorForce;
             rearRightWheelCollider.motorTorque = throttle * motorForce;
-            
+
         }
         else
         {
             rearLeftWheelCollider.motorTorque = 0;
             rearRightWheelCollider.motorTorque = 0;
         }
-        brakeForce = isBreaking ? 10000f : 0f;
-        frontLeftWheelCollider.brakeTorque = brakeForce;
-        frontRightWheelCollider.brakeTorque = brakeForce;
+        brakeForce = isBreaking ? 25000f : 0f;
         rearLeftWheelCollider.brakeTorque = brakeForce;
         rearRightWheelCollider.brakeTorque = brakeForce;
-
-        Debug.Log(rearLeftWheelCollider.motorTorque);
     }
 
     public void FixedUpdate()

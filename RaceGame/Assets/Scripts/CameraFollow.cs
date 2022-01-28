@@ -9,6 +9,7 @@ public class CameraFollow : MonoBehaviour
     [SerializeField] private Transform target;
     [SerializeField] private float translateSpeed;
     [SerializeField] private float rotationSpeed;
+    [SerializeField] private Vector3 mousePos;
 
     private void FixedUpdate()
     {
@@ -18,6 +19,7 @@ public class CameraFollow : MonoBehaviour
 
     private void HandleTranslation()
     {
+        mousePos = Input.mousePosition;
         var targetPosition = target.TransformPoint(offset);
         transform.position = Vector3.Lerp(transform.position, targetPosition, translateSpeed * Time.deltaTime);
     }
